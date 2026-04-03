@@ -1,0 +1,14 @@
+{
+    "al.enableCodeAnalysis": true,
+    "al.codeAnalyzers": [
+            "${CodeCop}",
+            "${PerTenantExtensionCop}",
+            "${UICop}",
+    ],
+    "al.enableCodeActions": true,
+    "editor.codeLens": true,
+    "al.browser": "Chrome",
+    "al.compilationOptions": {
+        "outFolder": "ZApps"
+    }
+}

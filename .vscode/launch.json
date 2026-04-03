@@ -1,0 +1,34 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "DEV2",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "DEV2",
+            "tenant": "40e19726-7646-4ccc-ad5e-1b333b1cb832",
+            "startupObjectId": 22,
+            "startupObjectType": "Page",
+            "breakOnError": "All",
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+           "schemaUpdateMode": "ForceSync"     
+        },
+         {
+            "name": "DEV1",
+            "request": "launch",
+            "type": "al",
+            "environmentName": "DEV1",
+            "environmentType": "Sandbox",
+            "tenant": "40e19726-7646-4ccc-ad5e-1b333b1cb832",
+            "startupObjectId": 9300,
+            "startupObjectType": "Page",
+            "breakOnError": "All",
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true  
+        }
+    ]
+}
