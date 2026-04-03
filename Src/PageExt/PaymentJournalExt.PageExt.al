@@ -30,8 +30,26 @@ pageextension 50130 PaymentJournalExt extends "Payment Journal"
         }
         addafter(Post)
         {
-            action(PostSC)
+            // action(PostSC)
+            // {
+            //     ApplicationArea = Basic, Suite;
+            //     Caption = 'P&ost';
+            //     Image = PostOrder;
+            //     Promoted = true;
+            //     PromotedCategory = Category8;
+            //     PromotedIsBig = true;
+            //     ShortCutKey = 'F9';
+            //     ToolTip = 'Finalize the document or journal by posting the amounts and quantities to the related accounts in your company books.';
+
+            //     trigger OnAction()
+            //     begin
+            //         CODEUNIT.Run(CODEUNIT::"Gen. Jnl.-Post SC", Rec);
+            //         CurrPage.Update(false);
+            //     end;
+            // }
+            action(PostChq)
             {
+                Visible = Rec."Bank Payment Type" = Rec."Bank Payment Type"::"Computer Check";
                 ApplicationArea = Basic, Suite;
                 Caption = 'P&ost';
                 Image = PostOrder;
@@ -44,9 +62,12 @@ pageextension 50130 PaymentJournalExt extends "Payment Journal"
                 trigger OnAction()
                 begin
                     CODEUNIT.Run(CODEUNIT::"Gen. Jnl.-Post SC", Rec);
+                    //CurrentJnlBatchName := GetRangeMax("Journal Batch Name");
+                    //SetJobQueueVisibility();
                     CurrPage.Update(false);
                 end;
             }
+
         }
         addafter("Post and &Print")
         {

@@ -8,7 +8,7 @@ codeunit 50107 MySubscriber
         VoidCheckLedger: Record "Check Ledger Entry";
         ConfirmVoid: Page "Confirm Void";
         CheckLedgEntry2: Record "Check Ledger Entry";
-    //ChequeMgt: Codeunit ChequeMgt;
+        ChequeMgt: Codeunit ChequeMgt;
     begin
         //PV
         GenJnlLine.TESTFIELD("External Document No.");
@@ -33,7 +33,7 @@ codeunit 50107 MySubscriber
 
         VoidRemarks := ConfirmVoid.GetVoidRemarks();
 
-        // ChequeMgt.VoidCheck(GenJnlLine, VoidRemarks);
+        ChequeMgt.VoidCheck(GenJnlLine, VoidRemarks);
         IsHandled := true;
     end;
 
