@@ -26,20 +26,20 @@ pageextension 50131 CheckLedgerEntriesExt extends "Check Ledger Entries"
         }
         addafter("Void Check")
         {
-            action("Void Check SC")
+            action("VoidCheckChqMgt")
             {
                 ApplicationArea = Basic, Suite;
                 Caption = 'Void Check';
                 Image = VoidCheck;
+                ToolTip = 'Void the check if, for example, the check is not cashed by the bank.';
                 Promoted = true;
                 PromotedCategory = Process;
-                ToolTip = 'Void the check if, for example, the check is not cashed by the bank.';
 
                 trigger OnAction()
                 var
-                // CheckManagement: Codeunit ChequeMgt;
+                    CheckManagement: Codeunit ChequeMgt;
                 begin
-                    //CheckManagement.FinancialVoidCheck(Rec);
+                    CheckManagement.FinancialVoidCheck(Rec);
                 end;
             }
         }

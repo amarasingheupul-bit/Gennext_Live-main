@@ -49,7 +49,7 @@ pageextension 50130 PaymentJournalExt extends "Payment Journal"
             // }
             action(PostChq)
             {
-                Visible = Rec."Bank Payment Type" = Rec."Bank Payment Type"::"Computer Check";
+                //Visible = Rec."Bank Payment Type" = Rec."Bank Payment Type"::"Computer Check";
                 ApplicationArea = Basic, Suite;
                 Caption = 'P&ost';
                 Image = PostOrder;

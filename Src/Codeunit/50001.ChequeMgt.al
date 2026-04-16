@@ -713,7 +713,7 @@ codeunit 50106 ChequeMgt
         GenJnlLine2: Record "Gen. Journal Line";
         Currency: Record Currency;
     begin
-        Currency.Get(BankAcc."Currency Code");
+        //Currency.Get(BankAcc."Currency Code");
         GenJnlLine2.Init();
         GenJnlLine2."System-Created Entry" := true;
         GenJnlLine2."Financial Void" := true;
@@ -743,7 +743,7 @@ codeunit 50106 ChequeMgt
         TransactionBalance: Decimal;
     begin
         CheckLedgEntry.TestField("Entry Status", CheckLedgEntry."Entry Status"::Posted);
-        CheckLedgEntry.TestField("Statement Status", CheckLedgEntry."Statement Status"::Open);
+        //CheckLedgEntry.TestField("Statement Status", CheckLedgEntry."Statement Status"::Open);
         CheckLedgEntry.TestField("Bal. Account No.");
         BankAcc.Get(CheckLedgEntry."Bank Account No.");
         BankAccLedgEntry2.Get(CheckLedgEntry."Bank Account Ledger Entry No.");
