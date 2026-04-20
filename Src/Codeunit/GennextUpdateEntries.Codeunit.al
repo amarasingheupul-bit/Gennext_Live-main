@@ -253,6 +253,7 @@ codeunit 50111 "4HC Gennext Update Entries"
         ServiceItem: Record "Service Item";
         ServiceSetup: Record "Service Mgt. Setup";
         PurchItemEntry: Record "Item Ledger Entry";
+        Item: Record Item;
         Noseries: Codeunit "No. Series";
         SerialList: List of [Code[50]];
     begin
@@ -271,7 +272,23 @@ codeunit 50111 "4HC Gennext Update Entries"
                     ServiceItem."No." := Noseries.GetNextNo(ServiceSetup."Service Item Nos.");
                     ServiceItem.Description := ItemLedgerEntry.Description;
                     ServiceItem.Insert(true);
+
+                    // Temporarily unblock item to allow Validate to proceed
+                    if Item.Get(ItemLedgerEntry."Item No.") then
+                        if Item.Blocked then begin
+                            Item.Blocked := false;
+                            Item.Modify();
+                        end;
+
                     ServiceItem.Validate("Item No.", ItemLedgerEntry."Item No.");
+
+                    // Re-block the item after validate
+                    if Item.Get(ItemLedgerEntry."Item No.") then
+                        if not Item.Blocked then begin
+                            Item.Blocked := true;
+                            Item.Modify();
+                        end;
+
                     SalesShipmentHeader.Reset();
                     if SalesShipmentHeader.Get(ItemLedgerEntry."Document No.") then
                         ServiceItem."Description 2" := SalesShipmentHeader."Order No.";
