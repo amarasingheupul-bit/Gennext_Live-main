@@ -28,5 +28,10 @@ tableextension 50110 OpportunityExt extends Opportunity
             DataClassification = ToBeClassified;
             Caption = 'Estimated GP';
         }
+        field(50105; "100% Payment Received"; Boolean)
+        {
+            Caption = '100% Payment Received';
+            Editable = true;
+        }
     }
 }
