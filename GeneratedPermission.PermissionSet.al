@@ -91,7 +91,7 @@ permissionset 50100 GeneratedPermission
         page SolutionPillars = X,
         page "Transport MatrixS365" = X,
         page UserDeviations = X,
-        page UserLoginIdentification = X,
+        // page UserLoginIdentification = X,
         report "Dispatch Advice" = X,
         tabledata "4HC Gennext Permission" = RIMD,
         table "4HC Gennext Permission" = X,

@@ -708,34 +708,75 @@ codeunit 50106 ChequeMgt
         end;
     end;
 
-    local procedure PostRoundingAmount(BankAcc: Record "Bank Account"; CheckLedgEntry: Record "Check Ledger Entry"; PostingDate: Date; RoundingAmount: Decimal)
+    local procedure PostRoundingAmount(
+    BankAcc: Record "Bank Account";
+    CheckLedgEntry: Record "Check Ledger Entry";
+    PostingDate: Date;
+    RoundingAmount: Decimal)
     var
         GenJnlLine2: Record "Gen. Journal Line";
         Currency: Record Currency;
+        GLAccount: Record "G/L Account";
+        AccountNo: Code[20];
     begin
-        //Currency.Get(BankAcc."Currency Code");
+        // FCY account setup
+        if BankAcc."Currency Code" <> '' then begin
+            Currency.Get(BankAcc."Currency Code");
+
+            if RoundingAmount > 0 then
+                AccountNo := Currency."Conv. LCY Rndg. Debit Acc."
+            else
+                AccountNo := Currency."Conv. LCY Rndg. Credit Acc.";
+        end;
+
+        // Fallback for LCY
+        if AccountNo = '' then begin
+            GLAccount.Reset();
+            GLAccount.SetRange("Direct Posting", true);
+
+            if not GLAccount.FindFirst() then
+                Error('No valid posting G/L Account found.');
+
+            AccountNo := GLAccount."No.";
+        end;
+
         GenJnlLine2.Init();
         GenJnlLine2."System-Created Entry" := true;
         GenJnlLine2."Financial Void" := true;
         GenJnlLine2."Document No." := CheckLedgEntry."Document No.";
-        GenJnlLine2."Account Type" := GenJnlLine2."Account Type"::"G/L Account";
         GenJnlLine2."Posting Date" := PostingDate;
-        if RoundingAmount > 0 then
-            GenJnlLine2.Validate("Account No.", Currency.GetConvLCYRoundingDebitAccount())
-        else
-            GenJnlLine2.Validate("Account No.", Currency.GetConvLCYRoundingCreditAccount());
-        GenJnlLine2.Validate("Currency Code", BankAcc."Currency Code");
-        GenJnlLine2.Description := StrSubstNo(VoidingCheckMsg, CheckLedgEntry."Check No.");
-        GenJnlLine2."Source Code" := SourceCodeSetup."Financially Voided Check";
+
+        GenJnlLine2."Account Type" :=
+            GenJnlLine2."Account Type"::"G/L Account";
+
+        GenJnlLine2.Validate("Account No.", AccountNo);
+
+        GenJnlLine2.Validate(
+            "Currency Code",
+            BankAcc."Currency Code");
+
+        GenJnlLine2.Description :=
+            StrSubstNo(
+                VoidingCheckMsg,
+                CheckLedgEntry."Check No.");
+
+        GenJnlLine2."Source Code" :=
+            SourceCodeSetup."Financially Voided Check";
+
         GenJnlLine2."Allow Zero-Amount Posting" := true;
-        GenJnlLine2.Validate(Amount, 0);
-        GenJnlLine2."Amount (LCY)" := RoundingAmount;
-        GenJnlLine2."Shortcut Dimension 1 Code" := BankAccLedgEntry2."Global Dimension 1 Code";
-        GenJnlLine2."Shortcut Dimension 2 Code" := BankAccLedgEntry2."Global Dimension 2 Code";
-        GenJnlLine2."Dimension Set ID" := BankAccLedgEntry2."Dimension Set ID";
-        OnPostRoundingAmountOnBeforeGenJnlPostLine(GenJnlLine2, CheckLedgEntry, BankAccLedgEntry2);
+
+        GenJnlLine2.Validate(Amount, RoundingAmount);
+
+        GenJnlLine2."Shortcut Dimension 1 Code" :=
+            BankAccLedgEntry2."Global Dimension 1 Code";
+
+        GenJnlLine2."Shortcut Dimension 2 Code" :=
+            BankAccLedgEntry2."Global Dimension 2 Code";
+
+        GenJnlLine2."Dimension Set ID" :=
+            BankAccLedgEntry2."Dimension Set ID";
+
         GenJnlPostLine.RunWithCheck(GenJnlLine2);
-        OnPostRoundingAmountOnAfterGenJnlPostLine(GenJnlLine2, CheckLedgEntry, GenJnlPostLine);
     end;
 
     local procedure FinancialVoidCheckPreValidation(var CheckLedgEntry: Record "Check Ledger Entry")

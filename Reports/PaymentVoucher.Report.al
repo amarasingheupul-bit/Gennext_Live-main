@@ -4,6 +4,7 @@ report 50111 PaymentVoucher
     UsageCategory = ReportsAndAnalysis;
     DefaultLayout = RDLC;
     RDLCLayout = './Reports/Layouts/Payment Voucher.rdl';
+    Permissions = tabledata "Gen. Journal Line" = RIMD;
 
     dataset
     {

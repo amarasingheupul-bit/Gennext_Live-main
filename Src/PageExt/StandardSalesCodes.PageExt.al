@@ -4,12 +4,12 @@ pageextension 50148 "4HC Standard Sales Codes" extends "Standard Sales Codes"
     {
         addfirst(FactBoxes)
         {
-            part("Attached Documents"; "Document Attachment Factbox")
-            {
-                ApplicationArea = All;
-                Caption = 'Attachments';
-                SubPageLink = "Table ID" = const(170), "No." = field(Code);
-            }
+            // part("Attached Documents"; "Document Attachment Factbox")
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Attachments';
+            //     SubPageLink = "Table ID" = const(170), "No." = field(Code);
+            // }
             systempart(PyamentTermsLinks; Links)
             {
                 ApplicationArea = RecordLinks;

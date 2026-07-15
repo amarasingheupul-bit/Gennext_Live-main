@@ -245,7 +245,7 @@ pageextension 50104 "4HC Sales Quote" extends "Sales Quote"
                     Rec.TestField("Shortcut Dimension 1 Code");
                     Rec."Approval Sender" := Rec."Salesperson Code";
                     Rec.CalcFields("Amount");
-                    Rec.TestField("Amount");
+                    //Rec.TestField("Amount");
                     this.GetApprovalUserIDBaseMargin();
                     this.GetApprovalUserIDBasedAmount();
                     if ExistApprovalWorkflow then begin

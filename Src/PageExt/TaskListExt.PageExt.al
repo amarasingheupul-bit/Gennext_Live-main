@@ -4,12 +4,12 @@ pageextension 50117 TaskListExt extends "Task List"
     {
         addbefore(Control1900383207)
         {
-            part("Attached Documents"; "Document Attachment Factbox")
-            {
-                ApplicationArea = All;
-                Caption = 'Attachments';
-                SubPageLink = "Table ID" = const(170), "No." = field("No.");
-            }
+            // part("Attached Documents"; "Document Attachment Factbox")
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Attachments';
+            //     SubPageLink = "Table ID" = const(170), "No." = field("No.");
+            // }
         }
     }
     actions

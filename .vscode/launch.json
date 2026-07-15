@@ -17,10 +17,10 @@
            "schemaUpdateMode": "ForceSync"     
         },
          {
-            "name": "DEV1",
+            "name": "DoNotUse",
             "request": "launch",
             "type": "al",
-            "environmentName": "DEV1",
+            "environmentName": "DoNotUse",
             "environmentType": "Sandbox",
             "tenant": "40e19726-7646-4ccc-ad5e-1b333b1cb832",
             "startupObjectId": 9300,
