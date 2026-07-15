@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-07-07T08:50:00.5819027Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-07-15T11:00:43.6328586Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -454,7 +454,6 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <rd:Selected>true</rd:Selected>
                         <Textbox Name="VATRegistrationNo_CompanyInformation2">
                           <rd:DefaultName>VATRegistrationNo_CompanyInformation</rd:DefaultName>
                           <CanGrow>true</CanGrow>
@@ -2644,11 +2643,15 @@
                 <TextRuns>
                   <TextRun>
                     <Value>Date Of Supply    : </Value>
-                    <Style />
+                    <Style>
+                      <Format>MM/dd/yyyy</Format>
+                    </Style>
                   </TextRun>
                   <TextRun>
                     <Value>=First(Fields!Shipment_Date.Value, "DataSet_Result")</Value>
-                    <Style />
+                    <Style>
+                      <Format>MM/dd/yyyy</Format>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
@@ -2663,26 +2666,6 @@
               <Border>
                 <Style>Solid</Style>
               </Border>
-              <TopBorder>
-                <Color>Black</Color>
-                <Style>Solid</Style>
-                <Width>1pt</Width>
-              </TopBorder>
-              <BottomBorder>
-                <Color>Black</Color>
-                <Style>Solid</Style>
-                <Width>1pt</Width>
-              </BottomBorder>
-              <LeftBorder>
-                <Color>Black</Color>
-                <Style>Solid</Style>
-                <Width>1pt</Width>
-              </LeftBorder>
-              <RightBorder>
-                <Color>Black</Color>
-                <Style>Solid</Style>
-                <Width>1pt</Width>
-              </RightBorder>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
