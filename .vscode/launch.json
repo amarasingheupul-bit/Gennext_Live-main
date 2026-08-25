@@ -2,11 +2,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "DEV2",
+            "name": "UAT",
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
-            "environmentName": "DEV2",
+            "environmentName": "UAT",
             "tenant": "40e19726-7646-4ccc-ad5e-1b333b1cb832",
             "startupObjectId": 22,
             "startupObjectType": "Page",

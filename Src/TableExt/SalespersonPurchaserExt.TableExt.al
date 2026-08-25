@@ -6,7 +6,7 @@ tableextension 50114 SalespersonPurchaserExt extends "Salesperson/Purchaser"
         {
             Caption = 'Password';
             DataClassification = ToBeClassified;
-            ExtendedDatatype = Masked;
+            //ExtendedDatatype = Masked;
         }
         field(50101; UserLevel; Enum UserLevels)
         {
@@ -44,5 +44,11 @@ tableextension 50114 SalespersonPurchaserExt extends "Salesperson/Purchaser"
             Caption = 'Vice President';
             TableRelation = "Salesperson/Purchaser";
         }
+        field(50107; "SM"; Boolean)
+        {
+            Caption = 'SM';
+            //TableRelation = "Salesperson/Purchaser";
+        }
+
     }
 }

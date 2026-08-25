@@ -30,6 +30,11 @@ pageextension 50104 "4HC Sales Quote" extends "Sales Quote"
                 Importance = Additional;
                 MultiLine = true;
             }
+            field("Senior Sales Manager"; Rec."Senior Sales Manager")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
         }
         addafter(General)
         {
@@ -253,14 +258,14 @@ pageextension 50104 "4HC Sales Quote" extends "Sales Quote"
                         Rec.Status := Rec.Status::"Pending Approval";
                     end;
                     if not ExistApprovalWorkflow then begin
-                        this.GetTotoalChargerAmountandUpdatePriceAndDelete();
+                        // this.GetTotoalChargerAmountandUpdatePriceAndDelete();
                         Rec."Approval Status" := Rec."Approval Status"::"Released";
                         Rec.Status := Rec.Status::Released;
                         Rec."Approver ID" := Rec."Salesperson Code";
                     end;
                     Rec.Modify();
                     CurrPage.Close();
-                    Message(Text011Msg);
+                    Message(Text011Msg, Rec."Approver ID");
                 end;
             }
             action(CustomCancelApprovalRequest)
@@ -445,21 +450,52 @@ pageextension 50104 "4HC Sales Quote" extends "Sales Quote"
         ExistApprovalWorkflow: Boolean;
         Text013Msg: Label 'The document has been reopened.';
         Text012Msg: Label 'The approval request has been delegated to %1.', Comment = '%1 is the approver ID';
-        Text011Msg: Label 'The document has been sent for approval.';
+        Text011Msg: Label 'The document has been sent for approval to %1.', Comment = '%1 = approver ID';
         Text014Msg: Label 'The approval request has been canceled.';
         Text015Msg: Label 'The document has been approved.';
         Text016Msg: Label 'The document has been rejected.';
+
+    local procedure SetSeniorSalesManager()
+    var
+        UserSetup: Record "User Setup";
+        SalesPerson: Record "Salesperson/Purchaser";
+    begin
+        // Don't touch it if it's already populated - "others don't want change"
+        // if Rec."Senior Sales Manager" <> '' then
+        //     exit;
+
+        // if not UserSetup.Get(UserId) then
+        //     exit;
+
+        // if UserSetup."Salespers./Purch. Code" = '' then
+        //     exit;
+
+        // if not SalesPerson.Get(UserSetup."Salespers./Purch. Code") then
+        //     exit;
+
+        // Only auto-fill when the logged-in salesperson is flagged as SM
+        if SalesPerson.SM then
+            Rec."Senior Sales Manager" := true;
+    end;
 
     local procedure GetApprovalUserIDBaseMargin()
     var
         ApprovalLine: Record "4HC Custom Approval Line";
         SalesPerson: Record "Salesperson/Purchaser";
+        UseSMApprover: Boolean;
     begin
+        // Auto-fill Senior Sales Manager from the logged-in user, only if SM flag is true
+        SetSeniorSalesManager();
+
+        UseSMApprover := (Rec."Senior Sales Manager" = true);
+
         ApprovalLine.Reset();
         ApprovalLine.SetRange(Type, ApprovalLine.Type::Margin);
         ApprovalLine.SetRange("Shortcut Dimension 1 Code", Rec."Shortcut Dimension 1 Code");
         ApprovalLine.SetRange("Document Type", ApprovalLine."Document Type"::"Sales Quote");
-        ApprovalLine.SetRange("Shortcut Dimension 2 Code", Rec."Shortcut Dimension 2 Code"); // when product wise approval
+        ApprovalLine.SetRange("Shortcut Dimension 2 Code", Rec."Shortcut Dimension 2 Code");
+        ApprovalLine.SetRange(SM, UseSMApprover);
+
         if ApprovalLine.FindSet() then
             repeat
                 if not DirectorApproval then
@@ -572,19 +608,26 @@ pageextension 50104 "4HC Sales Quote" extends "Sales Quote"
     local procedure DelegateApproval()
     var
         ApprovalLine: Record "4HC Custom Approval Line";
+        SalesPerson: Record "Salesperson/Purchaser";
     begin
         ApprovalLine.SetRange(Type, Rec."Approval Base Type");
         ApprovalLine.SetRange("Shortcut Dimension 1 Code", Rec."Shortcut Dimension 1 Code");
         ApprovalLine.SetRange("Document Type", ApprovalLine."Document Type"::"Sales Quote");
         ApprovalLine.SetFilter("Approver ID", '<>%1', Rec."Approver ID");
         if ApprovalLine.FindFirst() then begin
-            Rec."Approver ID" := ApprovalLine."Approver ID";
+            if ApprovalLine."Approver ID" = 'VP' then begin
+                if SalesPerson.Get(Rec."Salesperson Code") then
+                    Rec."Approver ID" := SalesPerson."Vice President";
+            end
+            else
+                Rec."Approver ID" := ApprovalLine."Approver ID";
             Rec.Modify();
             CurrPage.Update();
         end
         else
             Message('No other approver found for this approval type.');
     end;
+
 
     procedure GetCurrentLoginUser(): Code[20]
     var

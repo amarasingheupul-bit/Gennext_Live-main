@@ -166,10 +166,10 @@ report 50107 "Tax Invoice"
                     TempCustLedgEntry.SetAutoCalcFields(Amount);
                     if TempCustLedgEntry.FindFirst() then;
 
-                    ReportTitle := 'Tax Invoice';
+                    ReportTitle := 'TAX INVOICE';
                     if TaxArea.Get("Tax Area Code") then
-                        if TaxArea.Description = 'SVAT Invoice' then
-                            ReportTitle := 'SVAT Invoice';
+                        if TaxArea.Description = 'SVAT INVOICE' then
+                            ReportTitle := 'SVAT INVOICE';
 
                     if BankAcc.Get("Company Bank Account Code") then begin
                         TempBankAcc.Init();

@@ -1,5 +1,15 @@
 pageextension 50142 "4HC Salespersons/Purchasers" extends "Salespersons/Purchasers"
 {
+    layout
+    {
+        addafter("Phone No.")
+        {
+            field(Password; Rec.Password)
+            {
+                ApplicationArea = All;
+            }
+        }
+    }
 
     trigger OnOpenPage()
     var

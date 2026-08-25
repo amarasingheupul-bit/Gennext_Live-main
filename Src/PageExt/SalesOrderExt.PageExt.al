@@ -312,7 +312,7 @@ pageextension 50107 "Sales Order Ext" extends "Sales Order"
                     end;
                     Rec.Modify();
                     CurrPage.Close();
-                    Message(Text011Msg);
+                    Message(Text011Msg, Rec."Approver ID");
                 end;
             }
             action(CustomCancelApprovalRequest)
@@ -518,10 +518,13 @@ pageextension 50107 "Sales Order Ext" extends "Sales Order"
         ExistApprovalWorkflow: Boolean;
         Text013Msg: Label 'The document has been reopened.';
         Text012Msg: Label 'The approval request has been delegated to %1.', Comment = '%1 is the approver ID';
-        Text011Msg: Label 'The document has been sent for approval.';
+        Text011Msg: Label 'The document has been sent for approval to %1.', Comment = '%1 = approver ID';
         Text014Msg: Label 'The approval request has been canceled.';
         Text015Msg: Label 'The document has been approved.';
         Text016Msg: Label 'The document has been rejected.';
+        NoVPSetupErr: Label 'Your login salesperson (%1) does not have a Vice President assigned. Please contact your administrator.', Comment = '%1 = Salesperson Code';
+        ApprovalEmailSubjectTxt: Label 'Sales Order %1 - Approval Required', Comment = '%1 = Sales Order No.';
+        ApprovalEmailBodyTxt: Label 'Dear %1,<br/><br/>Sales Order %2 for customer %3 (Margin: %4%%) requires your approval.<br/><br/>Please review and approve or reject it in Business Central.', Comment = '%1=Approver Name,%2=Sales Order No.,%3=Customer Name,%4=Margin %';
 
     local procedure GetApprovalUserIDBaseMargin()
     var
@@ -549,6 +552,9 @@ pageextension 50107 "Sales Order Ext" extends "Sales Order"
                         Rec.Modify();
                     end;
             until ApprovalLine.Next() = 0;
+
+        if ExistApprovalWorkflow and (Rec."Approver ID" <> '') then
+            SendApprovalNotificationEmail(Rec."Approver ID");
     end;
 
     local procedure GetApprovalUserIDBasedAmount()
@@ -572,13 +578,60 @@ pageextension 50107 "Sales Order Ext" extends "Sales Order"
                         end
                         else
                             Rec."Approver ID" := ApprovalLine."Approver ID";
-                        Rec."Approval Base Type" := Rec."Approval Base Type"::Value;
+                        Rec."Approval Base Type" := Rec."Approval Base Type"::Margin;
                         if ApprovalLine.Director then
                             DirectorApproval := true;
                         ExistApprovalWorkflow := true;
                         Rec.Modify();
                     end;
-            until ApprovalLine.Next() = 0;
+            until ApprovalLine.Next() = 0
+        else begin
+            ApprovalLine.SetRange("Shortcut Dimension 2 Code");
+            if ApprovalLine.FindSet() then
+                repeat
+                    if not DirectorApproval then
+                        if (ApprovalLine."Minimum Range" <= Rec."Margin %") and (ApprovalLine."Maximum Range" > Rec."Margin %") then begin
+                            if ApprovalLine."Approver ID" = 'VP' then begin
+                                if SalesPerson.Get(Rec."Salesperson Code") then
+                                    Rec."Approver ID" := SalesPerson."Vice President"
+                            end
+                            else
+                                Rec."Approver ID" := ApprovalLine."Approver ID";
+                            Rec."Approval Base Type" := Rec."Approval Base Type"::Margin;
+                            if ApprovalLine.Director then
+                                DirectorApproval := true;
+                            ExistApprovalWorkflow := true;
+                            Rec.Modify();
+                        end;
+                until ApprovalLine.Next() = 0
+        end;
+    end;
+
+
+    local procedure SendApprovalNotificationEmail(ApproverID: Code[20])
+    var
+        ApproverSalesPerson: Record "Salesperson/Purchaser";
+        EmailMessage: Codeunit "Email Message";
+        EmailCU: Codeunit Email;
+        Subject: Text;
+        Body: Text;
+    begin
+        if not ApproverSalesPerson.Get(ApproverID) then
+            exit;
+
+        if ApproverSalesPerson."E-Mail" = '' then
+            exit;
+
+        Subject := StrSubstNo(ApprovalEmailSubjectTxt, Rec."No.");
+        Body := StrSubstNo(
+            ApprovalEmailBodyTxt,
+            ApproverSalesPerson.Name,
+            Rec."No.",
+            Rec."Sell-to Customer Name",
+            Rec."Margin %");
+
+        EmailMessage.Create(ApproverSalesPerson."E-Mail", Subject, Body, true);
+        EmailCU.Send(EmailMessage, Enum::"Email Scenario"::Default);
     end;
 
     local procedure SetVisibilityForActions()

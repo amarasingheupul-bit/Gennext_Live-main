@@ -35,6 +35,12 @@ pageextension 50129 SalespersonPurchaserCardExt extends "Salesperson/Purchaser C
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the SP Profile field.';
             }
+            field(SM; Rec.SM)
+            {
+                ApplicationArea = All;
+                Visible = false;
+                ToolTip = 'Specifies the value of the SM field.';
+            }
         }
     }
     trigger OnOpenPage()

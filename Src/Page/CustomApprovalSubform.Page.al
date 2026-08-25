@@ -43,6 +43,11 @@ page 50115 "4HC Custom Approval Subform"
                 {
                     ToolTip = 'Specifies the value of the Director field.';
                 }
+                field(SM; rec.SM)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the SM field.';
+                }
             }
         }
     }

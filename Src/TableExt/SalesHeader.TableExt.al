@@ -236,6 +236,10 @@ tableextension 50100 "4HC Sales Header" extends "Sales Header"
             Caption = 'Quote Type';
             TableRelation = "Quote Type S365"."Code S365";
         }
+        field(50606; "Senior Sales Manager"; Boolean)
+        {
+            //TableRelation = "Salesperson/Purchaser";
+        }
         modify("Currency Code")
         {
             trigger OnBeforeValidate()
@@ -245,6 +249,8 @@ tableextension 50100 "4HC Sales Header" extends "Sales Header"
             end;
         }
     }
+
+
     var
         CurrencyCodeErr: Label 'LKR is not allowed as a currency code for this document.';
 

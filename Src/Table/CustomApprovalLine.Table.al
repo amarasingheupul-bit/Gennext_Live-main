@@ -51,6 +51,9 @@ table 50110 "4HC Custom Approval Line"
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(2),
                                                           Blocked = const(false));
         }
+        field(31; "SM"; Boolean)
+        {
+        }
     }
 
     keys

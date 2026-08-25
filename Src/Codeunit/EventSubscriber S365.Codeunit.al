@@ -43,10 +43,10 @@ codeunit 50100 "EventSubscriber S365"
                 SalesHeader."Job TemplateS365" := Jobs."No.";
                 SalesHeader.Modify();
             end
-            else
-                if Opportunity.Get(SalesHeader."Opportunity No.") then
-                    if Opportunity."Sales Cycle Code" = 'PRESALES' then
-                        Error(Text001Err, Opportunity."Sales Cycle Code");
+            // else
+            //     if Opportunity.Get(SalesHeader."Opportunity No.") then
+            //         if Opportunity."Sales Cycle Code" = 'PRESALES' then
+            //             Error(Text001Err, Opportunity."Sales Cycle Code");
         end;
     end;
 
